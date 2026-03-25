@@ -1,6 +1,22 @@
 # syntax=docker/dockerfile:1
-FROM debian:bullseye-slim
+# Build from source to ensure library compatibility
+FROM rust:1-slim-bookworm AS builder
 
+WORKDIR /build
+
+# Install build dependencies
+RUN apt-get update && apt-get install -y pkg-config libssl-dev && rm -rf /var/lib/apt/lists/*
+
+# Clone and build OpenFang
+ARG OPENFANG_VERSION=v0.5.1
+RUN apt-get update && apt-get install -y git && rm -rf /var/lib/apt/lists/* \
+    && git clone --depth 1 --branch ${OPENFANG_VERSION} https://github.com/RightNow-AI/openfang.git . \
+    && cargo build --release --bin openfang
+
+# Runtime image
+FROM rust:1-slim-bookworm
+
+# Install runtime dependencies
 RUN apt-get update && apt-get install -y --no-install-recommends \
     ca-certificates \
     curl \
@@ -11,11 +27,11 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     npm \
     && rm -rf /var/lib/apt/lists/*
 
-ARG OPENFANG_VERSION=v0.5.1
-RUN curl -fsSL "https://github.com/RightNow-AI/openfang/releases/download/${OPENFANG_VERSION}/openfang-aarch64-unknown-linux-gnu.tar.gz" \
-    | tar -xzf - -C /usr/local/bin \
-    && chmod +x /usr/local/bin/openfang
+# Copy the built binary and agents
+COPY --from=builder /build/target/release/openfang /usr/local/bin/
+COPY --from=builder /build/agents /opt/openfang/agents
 
+# Verify binary works
 RUN openfang --version || echo "Binary installed successfully"
 
 RUN mkdir -p /data
