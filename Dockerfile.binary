@@ -11,12 +11,15 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     npm \
     && rm -rf /var/lib/apt/lists/*
 
-# Install Ubuntu xenial libssl1.0.0 for prebuilt binary compatibility
-# Provides libssl.so.1.0.0 and libcrypto.so.1.0.0 with both OPENSSL_1.0.0 and OPENSSL_1.0.2 version symbols
+# Install Ubuntu xenial libssl1.0.0 for prebuilt binary compatibility.
+# Extracting the package directly into / can corrupt the slim base image,
+# so only copy the two required shared libraries into place.
 RUN curl -fsSL "http://ports.ubuntu.com/ubuntu-ports/pool/main/o/openssl/libssl1.0.0_1.0.2g-1ubuntu4_arm64.deb" -o /tmp/libssl.deb \
-    && dpkg-deb -x /tmp/libssl.deb / \
+    && dpkg-deb -x /tmp/libssl.deb /tmp/libssl-extract \
+    && install -Dm644 /tmp/libssl-extract/lib/aarch64-linux-gnu/libssl.so.1.0.0 /usr/lib/aarch64-linux-gnu/libssl.so.1.0.0 \
+    && install -Dm644 /tmp/libssl-extract/lib/aarch64-linux-gnu/libcrypto.so.1.0.0 /usr/lib/aarch64-linux-gnu/libcrypto.so.1.0.0 \
     && ldconfig \
-    && rm -f /tmp/libssl.deb
+    && rm -rf /tmp/libssl.deb /tmp/libssl-extract
 
 ARG OPENFANG_VERSION=v0.5.1
 RUN curl -fsSL "https://github.com/RightNow-AI/openfang/releases/download/${OPENFANG_VERSION}/openfang-aarch64-unknown-linux-gnu.tar.gz" \

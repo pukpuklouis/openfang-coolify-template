@@ -3,7 +3,7 @@
 # category: ai
 # tags: ai, chatbot, openfang, automation
 # logo: svgs/openfang.svg
-# port: 4201
+# port: 4200
 
 services:
   openfang:
@@ -14,7 +14,7 @@ services:
         OPENFANG_VERSION: ${OPENFANG_VERSION:-v0.5.1}
 
     environment:
-      SERVICE_URL_OPENFANG_4201:
+      SERVICE_URL_OPENFANG_4200:
       OPENFANG_HOME: /data
       ANTHROPIC_API_KEY: ${ANTHROPIC_API_KEY:-}
       OPENAI_API_KEY: ${OPENAI_API_KEY:-}
@@ -38,7 +38,7 @@ services:
     command: ["sh", "-lc", "openfang init --quick && exec openfang start"]
 
     healthcheck:
-      test: ["CMD", "python3", "-c", "import urllib.request; urllib.request.urlopen('http://127.0.0.1:4201/api/health', timeout=5)"]
+      test: ["CMD", "python3", "-c", "import urllib.request; urllib.request.urlopen('http://127.0.0.1:4200/api/health', timeout=5)"]
       interval: 30s
       timeout: 10s
       retries: 5
