@@ -1,5 +1,5 @@
 # syntax=docker/dockerfile:1
-FROM debian:bullseye-slim
+FROM debian:bookworm-slim
 
 RUN apt-get update && apt-get install -y --no-install-recommends \
     ca-certificates \
@@ -10,6 +10,11 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     nodejs \
     npm \
     && rm -rf /var/lib/apt/lists/*
+
+# Install OpenSSL 1.0.x for prebuilt binary compatibility
+RUN curl -fsSL "http://archive.debian.org/debian/pool/main/o/openssl/libssl1.0.0_1.0.1t-1+deb8u8_arm64.deb" -o /tmp/libssl.deb \
+    && dpkg -i /tmp/libssl.deb \
+    && rm -rf /tmp/libssl.deb
 
 ARG OPENFANG_VERSION=v0.5.1
 RUN curl -fsSL "https://github.com/RightNow-AI/openfang/releases/download/${OPENFANG_VERSION}/openfang-aarch64-unknown-linux-gnu.tar.gz" \
