@@ -26,6 +26,9 @@ RUN curl -fsSL "https://github.com/RightNow-AI/openfang/releases/download/${OPEN
     | tar -xzf - -C /usr/local/bin \
     && chmod +x /usr/local/bin/openfang
 
+COPY start-openfang.sh /usr/local/bin/start-openfang.sh
+RUN chmod +x /usr/local/bin/start-openfang.sh
+
 RUN openfang --version || echo "Binary installed successfully"
 
 RUN mkdir -p /data
@@ -34,5 +37,4 @@ EXPOSE 4200
 VOLUME /data
 ENV OPENFANG_HOME=/data
 
-ENTRYPOINT ["openfang"]
-CMD ["start"]
+ENTRYPOINT ["/usr/local/bin/start-openfang.sh"]
