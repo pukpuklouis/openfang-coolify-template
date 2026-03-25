@@ -13,7 +13,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 
 # Install OpenSSL 1.0.2 for prebuilt binary compatibility (requires OPENSSL_1.0.2 symbols)
 # Use Debian 9 (stretch) libssl1.0.2 which provides the required version symbols
-RUN curl -fsSL "http://snapshot.debian.org/archive/debian/20210101T000000Z/pool/main/o/openssl/libssl1.0.2_1.0.2u-1~deb9u5_arm64.deb" -o /tmp/libssl.deb \
+RUN curl -fsSL "http://archive.debian.org/debian/pool/main/o/openssl1.0/libssl1.0.2_1.0.2u-1~deb9u1_arm64.deb" -o /tmp/libssl.deb \
     && dpkg-deb -x /tmp/libssl.deb / \
     && ldconfig \
     && rm -f /tmp/libssl.deb
