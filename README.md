@@ -1,75 +1,75 @@
-# OpenFang Coolify Template
+# OpenFang Coolify 範本
 
-Deploy OpenFang on Coolify using pre-built binaries. No compilation required.
+使用預建置的二進位檔案在 Coolify 上部署 OpenFang。無需編譯。
 
-## Features
+## 功能特色
 
-- **Fast deployment**: ~30 seconds vs ~10+ minutes for source build
-- **Linux ARM64 optimized**: Uses pre-built `aarch64-unknown-linux-gnu` binary
-- **Coolify ready**: One-click deployment with environment variable configuration
+- **快速部署**：約 30 秒，相較於從原始碼建置需 10 分鐘以上
+- **Linux ARM64 優化**：使用預建置的 `aarch64-unknown-linux-gnu` 二進位檔案
+- **Coolify 就緒**：一鍵部署，支援環境變數設定
 
-## Requirements
+## 需求
 
-- Coolify instance
-- Linux ARM64 server
+- Coolify 實例
+- Linux ARM64 伺服器
 
-## Deployment
+## 部署
 
-### 1. Add to Coolify
+### 1. 新增至 Coolify
 
-1. Go to Coolify Dashboard
-2. Create new Resource → Docker Compose
-3. Set Git Repository: `https://github.com/YOUR_USERNAME/openfang-coolify-template`
-4. Deploy
+1. 前往 Coolify 控制台
+2. 建立新資源 → Docker Compose
+3. 設定 Git 儲存庫：`https://github.com/YOUR_USERNAME/openfang-coolify-template`
+4. 部署
 
-### 2. Configure Environment Variables
+### 2. 設定環境變數
 
-In Coolify, set these environment variables:
+在 Coolify 中設定以下環境變數：
 
 ```env
-# OpenFang Version (optional, defaults to v0.5.1)
+# OpenFang 版本（選用，預設為 v0.5.1）
 OPENFANG_VERSION=v0.5.1
 
-# LLM Provider API Keys
+# LLM 供應商 API 金鑰
 ANTHROPIC_API_KEY=your-key
 OPENAI_API_KEY=your-key
 GROQ_API_KEY=your-key
 DEEPSEEK_API_KEY=your-key
 OPENROUTER_API_KEY=your-key
 
-# Channel Adapters (optional)
+# 頻道轉接器（選用）
 TELEGRAM_BOT_TOKEN=your-token
 DISCORD_BOT_TOKEN=your-token
 SLACK_BOT_TOKEN=your-token
 ```
 
-### 3. Access
+### 3. 存取
 
-Dashboard will be available at `http://your-server:4200`
+控制台將可透過 `http://your-server:4200` 存取
 
-## Version Update
+## 版本更新
 
-To update OpenFang version:
+更新 OpenFang 版本：
 
-1. Go to Coolify Dashboard
-2. Edit Environment Variables
-3. Change `OPENFANG_VERSION` to desired version
-4. Redeploy
+1. 前往 Coolify 控制台
+2. 編輯環境變數
+3. 將 `OPENFANG_VERSION` 變更為所需版本
+4. 重新部署
 
-Available versions: https://github.com/RightNow-AI/openfang/releases
+可用版本：https://github.com/RightNow-AI/openfang/releases
 
-## Ports
+## 連接埠
 
-| Port | Service |
-|------|---------|
-| 4200 | OpenFang Dashboard |
-
-## Volumes
-
-| Volume | Purpose |
+| 連接埠 | 服務 |
 |--------|---------|
-| openfang-data | Persistent data storage |
+| 4200 | OpenFang 控制台 |
 
-## License
+## 資料卷
 
-MIT - OpenFang is licensed under MIT
+| 資料卷 | 用途 |
+|--------|---------|
+| openfang-data | 永久資料儲存 |
+
+## 授權條款
+
+MIT - OpenFang 採用 MIT 授權條款
