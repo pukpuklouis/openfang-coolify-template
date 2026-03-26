@@ -15,11 +15,6 @@ services:
 
     environment:
       SERVICE_URL_OPENFANG_4200:
-      HOST: 0.0.0.0
-      BIND_ADDRESS: 0.0.0.0
-      OPENFANG_HOST: 0.0.0.0
-      SERVER_HOST: 0.0.0.0
-      LISTEN_ADDR: 0.0.0.0
       OPENFANG_HOME: /data
       ANTHROPIC_API_KEY: ${ANTHROPIC_API_KEY:-}
       OPENAI_API_KEY: ${OPENAI_API_KEY:-}
@@ -39,6 +34,7 @@ services:
 
     volumes:
       - openfang-data:/data
+      - ./config.toml:/data/config.toml:ro
 
     healthcheck:
       test: ["CMD", "python3", "-c", "import urllib.request; urllib.request.urlopen('http://127.0.0.1:4200/api/health', timeout=5)"]
