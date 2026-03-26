@@ -33,8 +33,8 @@ services:
       SLACK_APP_TOKEN: ${SLACK_APP_TOKEN:-}
 
     volumes:
-      - openfang-data:/data
-      - ./config.toml:/data/config.toml:ro
+      - 'oo0kgco8o0cggkccsg444g4o_openfang-data:/data'
+      - '/data/coolify/applications/oo0kgco8o0cggkccsg444g4o/config.toml:/data/config.toml:ro'
 
     ports:
       - "4200:4200"
