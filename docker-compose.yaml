@@ -34,7 +34,6 @@ services:
 
     volumes:
       - 'openfang-data:/data'
-      - '/data/coolify/applications/oo0kgco8o0cggkccsg444g4o/config.toml:/data/config.toml:ro'
 
     ports:
       - "4200:4200"
