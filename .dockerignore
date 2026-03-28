@@ -1,0 +1,36 @@
+# Git
+.git
+.gitignore
+
+# IDE and editor directories
+.idea
+.vscode
+*.swp
+*.swo
+.agents
+.forge
+.omc
+.opencode
+.superset
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Environment files
+.env
+.env.local
+.env.*.local
+
+# Logs
+*.log
+
+# Documentation
+README.md
+*.md
+
+# Binary (we download it in Dockerfile)
+openfang
+
+# Lock files
+skills-lock.json

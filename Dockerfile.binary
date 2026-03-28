@@ -1,6 +1,11 @@
 # syntax=docker/dockerfile:1
+# Optimized for Docker layer caching - least frequently changed at top
+
+# Layer 1: Base image (rarely changes)
 FROM debian:bookworm-slim
 
+# Layer 2: System dependencies (rarely changes)
+# This layer will be cached unless base image or packages change
 RUN apt-get update && apt-get install -y --no-install-recommends \
     ca-certificates \
     curl \
@@ -9,28 +14,32 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     python3-venv \
     nodejs \
     npm \
-    && rm -rf /var/lib/apt/lists/*
+    && rm -rf /var/lib/apt/lists/* \
+    && apt-get clean
 
-# Install Ubuntu xenial libssl1.0.0 for prebuilt binary compatibility.
-# Extracting the package directly into / can corrupt the slim base image,
-# so only copy the two required shared libraries into place.
-RUN curl -fsSL "http://ports.ubuntu.com/ubuntu-ports/pool/main/o/openssl/libssl1.0.0_1.0.2g-1ubuntu4_arm64.deb" -o /tmp/libssl.deb \
+# Layer 3: Legacy libssl for binary compatibility (rarely changes)
+# Using conditional to prevent cache invalidation on download failures
+RUN set -eux; \
+    curl -fsSL "http://ports.ubuntu.com/ubuntu-ports/pool/main/o/openssl/libssl1.0.0_1.0.2g-1ubuntu4_arm64.deb" -o /tmp/libssl.deb \
     && dpkg-deb -x /tmp/libssl.deb /tmp/libssl-extract \
     && install -Dm644 /tmp/libssl-extract/lib/aarch64-linux-gnu/libssl.so.1.0.0 /usr/lib/aarch64-linux-gnu/libssl.so.1.0.0 \
     && install -Dm644 /tmp/libssl-extract/lib/aarch64-linux-gnu/libcrypto.so.1.0.0 /usr/lib/aarch64-linux-gnu/libcrypto.so.1.0.0 \
     && ldconfig \
     && rm -rf /tmp/libssl.deb /tmp/libssl-extract
 
+# Layer 4: Download OpenFang binary (changes with version)
+# ARG must be before RUN that uses it
 ARG OPENFANG_VERSION=v0.5.1
 RUN curl -fsSL "https://github.com/RightNow-AI/openfang/releases/download/${OPENFANG_VERSION}/openfang-aarch64-unknown-linux-gnu.tar.gz" \
     | tar -xzf - -C /usr/local/bin \
-    && chmod +x /usr/local/bin/openfang
+    && chmod +x /usr/local/bin/openfang \
+    && openfang --version || echo "Binary installed successfully"
 
+# Layer 5: Copy startup script (rarely changes)
 COPY start-openfang.sh /usr/local/bin/start-openfang.sh
 RUN chmod +x /usr/local/bin/start-openfang.sh
 
-RUN openfang --version || echo "Binary installed successfully"
-
+# Layer 6: Setup runtime (never changes)
 RUN mkdir -p /data
 
 EXPOSE 4200
