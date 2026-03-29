@@ -11,7 +11,14 @@ services:
       context: .
       dockerfile: Dockerfile.binary
       args:
-        OPENFANG_VERSION: ${OPENFANG_VERSION:-v0.5.1}
+        OPENFANG_VERSION: ${OPENFANG_VERSION:-v0.5.5}
+
+    hostname: carbonyl
+
+    networks:
+      default:
+        aliases:
+          - web
 
     environment:
       SERVICE_URL_OPENFANG_4200:
