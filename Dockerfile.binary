@@ -28,9 +28,9 @@ RUN set -eux; \
     && rm -rf /tmp/libssl.deb /tmp/libssl-extract
 
 # Layer 4: Download OpenFang binary (changes with version)
-# ARG must be before RUN that uses it
 ARG OPENFANG_VERSION=v0.5.5
-RUN curl -fsSL "https://github.com/RightNow-AI/openfang/releases/download/${OPENFANG_VERSION}/openfang-aarch64-unknown-linux-gnu.tar.gz" \
+RUN echo "Installing OpenFang ${OPENFANG_VERSION}" && \
+    curl -fsSL "https://github.com/RightNow-AI/openfang/releases/download/${OPENFANG_VERSION}/openfang-aarch64-unknown-linux-gnu.tar.gz" \
     | tar -xzf - -C /usr/local/bin \
     && chmod +x /usr/local/bin/openfang \
     && openfang --version || echo "Binary installed successfully"
